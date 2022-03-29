@@ -1,0 +1,23 @@
+<div class="wrap">
+
+  <h1>RedStar results calculator </h1>
+
+  <input id="file-upload"
+         type="file"
+         accept=".csv"
+         multiple
+         class="custom-file-input"
+         (change)="filesAppear($event)" />
+  <label for="file-upload">Select csv files</label>
+
+
+  <div class="result" *ngIf="calculatedResults.rows.length">
+    tournaments: {{calculatedResults.count}}
+    <br>
+    sum: {{calculatedResults.sum}}
+
+  </div>
+
+</div>
+
+
