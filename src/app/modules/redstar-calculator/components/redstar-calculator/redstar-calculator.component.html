@@ -1,6 +1,6 @@
-<div class="wrap">
+<div class="app-redstar-calculator__wrap">
 
-  <h1>RedStar results calculator </h1>
+  <div class="app-redstar-calculator__title">RedStar Results Calculator </div>
 
   <input id="file-upload"
          type="file"
@@ -12,9 +12,24 @@
 
 
   <div class="result" *ngIf="calculatedResults.rows.length">
-    tournaments: {{calculatedResults.count / 2}}
-    <br>
-    sum: {{calculatedResults.sum}}
+
+    <table class="app-redstar-calculator__table">
+      <tr>
+        <td>Day</td>
+        <td>Tournament (reg/finished)</td>
+        <td>Sum</td>
+      </tr>
+      <tr [style.font-size.px]="18">
+        <td><b>Total</b></td>
+        <td [style.text-align]="'center'">{{calculatedResults.regCount}} / {{calculatedResults.finishCount}}</td>
+        <td class="app-redstar-calculator__sum" [ngClass]="{'app-redstar-calculator__sum_red' : calculatedResults.sum < 0}">{{calculatedResults.sum | number : '1.2-2'}}</td>
+      </tr>
+      <tr *ngFor="let day of calculatedResults.dayStats">
+        <td>{{day.date | date:'MMM d'}}</td>
+        <td [style.text-align]="'center'">{{day.regCount}} / {{day.finishCount}}</td>
+        <td class="app-redstar-calculator__sum" [ngClass]="{'app-redstar-calculator__sum_red' : day.sum < 0}">{{day.sum | number : '1.2-2'}}</td>
+      </tr>
+    </table>
 
   </div>
 

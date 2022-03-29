@@ -2,6 +2,8 @@ import {TournamentInfo} from "./tournament-info";
 
 export interface PlayerResults {
   rows: Array<TournamentInfo>;
-  count: number;
+  regCount: number;
+  finishCount: number;
   sum: number;
+  dayStats: Array<{sum: number, regCount: number, finishCount: number, date: Date}>;
 }
