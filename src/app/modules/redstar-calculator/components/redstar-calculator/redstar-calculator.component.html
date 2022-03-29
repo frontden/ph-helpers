@@ -22,12 +22,12 @@
       <tr [style.font-size.px]="18">
         <td><b>Total</b></td>
         <td [style.text-align]="'center'">{{calculatedResults.regCount}} / {{calculatedResults.finishCount}}</td>
-        <td class="app-redstar-calculator__sum" [ngClass]="{'app-redstar-calculator__sum_red' : calculatedResults.sum < 0}">{{calculatedResults.sum | number : '1.2-2'}}</td>
+        <td class="app-redstar-calculator__sum" [ngClass]="{'app-redstar-calculator__sum_red' : calculatedResults.sum < 0}">{{calculatedResults.sum | number : '1.2-2'}} {{calculatedResults.currency}}</td>
       </tr>
       <tr *ngFor="let day of calculatedResults.dayStats">
         <td>{{day.date | date:'MMM d'}}</td>
         <td [style.text-align]="'center'">{{day.regCount}} / {{day.finishCount}}</td>
-        <td class="app-redstar-calculator__sum" [ngClass]="{'app-redstar-calculator__sum_red' : day.sum < 0}">{{day.sum | number : '1.2-2'}}</td>
+        <td class="app-redstar-calculator__sum" [ngClass]="{'app-redstar-calculator__sum_red' : day.sum < 0}">{{day.sum | number : '1.2-2'}} {{day.currency}}</td>
       </tr>
     </table>
 

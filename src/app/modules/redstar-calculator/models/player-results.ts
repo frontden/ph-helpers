@@ -5,5 +5,15 @@ export interface PlayerResults {
   regCount: number;
   finishCount: number;
   sum: number;
-  dayStats: Array<{sum: number, regCount: number, finishCount: number, date: Date}>;
+  dayStats: Array<DayResults>;
+  currency: string;
 }
+
+export interface DayResults {
+   regCount: number;
+   finishCount: number;
+   date: Date;
+   sum: number;
+   currency: string;
+}
+
