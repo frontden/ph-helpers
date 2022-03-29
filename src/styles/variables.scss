@@ -1,0 +1,28 @@
+// fonts
+@mixin font($fontFamily, $fontWeight, $fontStyle) {
+  font-family: $fontFamily;
+  font-weight: $fontWeight;
+  font-style: $fontStyle;
+}
+
+@mixin graphik-bold() {
+  @include font('Graphik', bold, normal);
+}
+
+@mixin graphik-semibold() {
+  @include font('Graphik', 600, normal);
+}
+
+@mixin graphik-regular() {
+  @include font('Graphik', normal, normal);
+}
+
+@mixin graphik-semibold-italic() {
+  @include font('Graphik', 600, italic);
+}
+
+@mixin graphik-light() {
+  @include font('Graphik', 400, light);
+}
+
+
