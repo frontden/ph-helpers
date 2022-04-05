@@ -9,7 +9,15 @@ import {DayResults, PlayerResults} from "../../models/player-results";
 })
 export class RedstarCalculatorComponent implements OnInit {
 
-  calculatedResults: PlayerResults = {rows: [], regCount: 0, finishCount: 0, sum: 0, dayStats: [], currency: ''};
+  calculatedResults: PlayerResults = {
+    rows: [],
+    regCount: 0,
+    finishCount: 0,
+    sum: 0,
+    dayStats: [],
+    currency: '',
+    bonus: 0
+  };
 
   constructor() {
   }
@@ -39,7 +47,13 @@ export class RedstarCalculatorComponent implements OnInit {
     const dayStatsResults: Array<DayResults> = [];
     result.forEach((res: any) => {
 
-      const dayStats = res.split('\n').filter((line: string) => line.includes('po_tourn')).map((line: string) => {
+      const tourStats = res.split('\n').filter((line: string) => line.includes('po_tourn'));
+      const bonusStats = res.split('\n').filter((line: string) => line.includes('pnt_bonus')).map((line: string) => {
+        const subLines = line.split(',');
+        return +subLines[5].replace(/"/g, '').split(' ')[0];
+      });
+
+      const dayStats = tourStats.map((line: string) => {
         const subLines = line.split(',');
         return {
           boId: subLines[0].replace(/"/g, ''),
@@ -47,7 +61,7 @@ export class RedstarCalculatorComponent implements OnInit {
           sum: +subLines[5].replace(/"/g, '').split(' ')[0],
           type: subLines[2].replace(/"/g, ''),
           date: new Date(subLines[4].replace('"', '').substr(0, 10)),
-          currency: subLines[5].replace(/"/g, '').split(' ')[1]
+          currency: subLines[5].replace(/"/g, '').split(' ')[1],
         }
       });
 
@@ -58,7 +72,10 @@ export class RedstarCalculatorComponent implements OnInit {
           return sum + currentValue.sum;
         }, 0),
         date: dayStats[0].date,
-        currency: dayStats[0].currency
+        currency: dayStats[0].currency,
+        bonus: bonusStats.reduce((sum: number, value: string) => {
+          return sum + +value;
+        }, 0)
       });
 
       rows.push(...dayStats);
@@ -72,7 +89,10 @@ export class RedstarCalculatorComponent implements OnInit {
         return sum + currentValue.sum;
       }, 0),
       dayStats: dayStatsResults,
-      currency: dayStatsResults[0].currency
+      currency: dayStatsResults[0].currency,
+      bonus: dayStatsResults.reduce((sum, currentValue) => {
+        return sum + currentValue.bonus;
+      }, 0),
     };
 
     this.calculatedResults.dayStats.sort((a, b) => a.date.getTime() - b.date.getTime());

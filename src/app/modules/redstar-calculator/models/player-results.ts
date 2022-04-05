@@ -7,6 +7,7 @@ export interface PlayerResults {
   sum: number;
   dayStats: Array<DayResults>;
   currency: string;
+  bonus: number;
 }
 
 export interface DayResults {
@@ -15,5 +16,6 @@ export interface DayResults {
    date: Date;
    sum: number;
    currency: string;
+   bonus: number;
 }
 
