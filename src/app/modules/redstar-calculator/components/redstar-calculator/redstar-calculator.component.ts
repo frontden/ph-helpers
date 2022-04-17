@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TournamentInfo} from "../../models/tournament-info";
-import {DayResults, PlayerResults} from "../../models/player-results";
+import {DayResults, LimitStats, PlayerResults} from "../../models/player-results";
 
 @Component({
   selector: 'app-redstar-calculator',
@@ -65,6 +65,19 @@ export class RedstarCalculatorComponent implements OnInit {
         }
       });
 
+      const regByLimit: LimitStats[] = [];
+      for (let dayStat of dayStats) {
+        if (dayStat.type !== 'po_tourn_reg') {
+          continue;
+        }
+        const limitElement = regByLimit.find(value => Math.abs(value.limit - Math.abs(dayStat.sum)) < 0.5);
+        if (limitElement) {
+          limitElement.count++;
+        } else {
+          regByLimit.push({limit: Math.abs(dayStat.sum), count: 1});
+        }
+      }
+
       dayStatsResults.push({
         regCount: dayStats.filter((v: any) => v.type === 'po_tourn_reg').length,
         finishCount: dayStats.filter((v: any) => v.type === 'po_tourn_win').length,
@@ -72,14 +85,30 @@ export class RedstarCalculatorComponent implements OnInit {
           return sum + currentValue.sum;
         }, 0),
         date: dayStats[0].date,
-        currency: dayStats[0].currency,
+        currency: dayStats[0].currency === 'USD' ? '$' : '€',
         bonus: bonusStats.reduce((sum: number, value: string) => {
           return sum + +value;
-        }, 0)
+        }, 0),
+        regByLimit: regByLimit,
+        regByLimitString: regByLimit.map( value => `${value.count} for ${value.limit}${dayStats[0].currency === 'USD' ? '$' : '€'}`).join(', ')
       });
 
       rows.push(...dayStats);
     });
+
+    let regByLimitAll: LimitStats[] = [];
+    for (let dayStatsResult of dayStatsResults) {
+      dayStatsResult.regByLimit?.forEach(dayValue => {
+        const limitElement = regByLimitAll.find(value => Math.abs(dayValue.limit - value.limit) < 0.5);
+        if (limitElement) {
+          limitElement.count += dayValue.count;
+        } else {
+          regByLimitAll.push({limit: dayValue.limit, count: dayValue.count});
+        }
+      });
+    }
+
+    const regByLimitAllString = regByLimitAll.map( value => `${value.count} for ${value.limit}${dayStatsResults[0].currency === 'USD' ? '$' : '€'}`).join(', ')
 
     this.calculatedResults = {
       rows,
@@ -89,10 +118,11 @@ export class RedstarCalculatorComponent implements OnInit {
         return sum + currentValue.sum;
       }, 0),
       dayStats: dayStatsResults,
-      currency: dayStatsResults[0].currency,
+      currency: dayStatsResults[0].currency === 'USD' ? '$' : '€',
       bonus: dayStatsResults.reduce((sum, currentValue) => {
         return sum + currentValue.bonus;
       }, 0),
+      regByLimitString: regByLimitAllString
     };
 
     this.calculatedResults.dayStats.sort((a, b) => a.date.getTime() - b.date.getTime());

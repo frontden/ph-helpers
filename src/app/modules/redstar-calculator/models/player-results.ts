@@ -8,6 +8,7 @@ export interface PlayerResults {
   dayStats: Array<DayResults>;
   currency: string;
   bonus: number;
+  regByLimitString?: string;
 }
 
 export interface DayResults {
@@ -17,5 +18,12 @@ export interface DayResults {
    sum: number;
    currency: string;
    bonus: number;
+   regByLimit?: LimitStats[];
+   regByLimitString?: string;
+}
+
+export interface LimitStats {
+    limit: number;
+    count: number;
 }
 
